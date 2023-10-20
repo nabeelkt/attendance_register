@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253716344596",
+    "project_id": "attendance-marker-bfd87",
+    "storage_bucket": "attendance-marker-bfd87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253716344596:android:c6310f2b885e60c6325c01",
+        "android_client_info": {
+          "package_name": "com.example.attendance_register"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4ewGuOgNbquHwpHn6Yq6yk2vxS9iPcRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
