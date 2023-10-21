@@ -2,8 +2,11 @@ import 'package:attendance_register/core/constants/constant.dart';
 import 'package:attendance_register/services/auth/auth_services.dart';
 import 'package:attendance_register/utils/components/buttons/log_button.dart';
 import 'package:attendance_register/utils/components/my_textfield.dart';
+import 'package:attendance_register/utils/helper/dob_validator.dart';
 import 'package:attendance_register/utils/helper/email_validator.dart';
+import 'package:attendance_register/utils/helper/name_validator.dart';
 import 'package:attendance_register/utils/helper/password_validator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -20,50 +23,56 @@ class SignUpScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _dateOfBirthController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  void signUserUp() async {
-    if (_formKey.currentState!.validate()) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+  @override
+  void dispose() {
+    List<TextEditingController> controllers = [
+      _emailController,
+      _passwordController,
+      _confirmPasswordController,
+      _firstNameController,
+      _lastNameController,
+      _dateOfBirthController,
+    ];
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future signUp() async {
+    if (passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
-        Navigator.pop(context);
-        showErrorMessage(e.code);
-      }
+      await addUserDetails({
+        'first name': _firstNameController.text.trim(),
+        'last name': _lastNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'date of birth': _dateOfBirthController.text.trim(),
+        'password': _passwordController.text.trim(),
+      });
     }
   }
 
-  void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.blueGrey,
-          title: Center(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+  Future addUserDetails(Map<String, String> userDetails) async {
+    await FirebaseFirestore.instance.collection('Employee').add(userDetails);
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -80,12 +89,6 @@ class _RegisterScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   sizedBox25,
-                  Icon(
-                    Icons.fingerprint,
-                    size: 50,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  sizedBox25,
                   const Text(
                     "A T T E N D  M E",
                     style: TextStyle(fontSize: 20),
@@ -99,7 +102,31 @@ class _RegisterScreenState extends State<SignUpScreen> {
                   ),
                   sizedBox25,
                   MyTextField(
-                    controller: emailController,
+                    controller: _firstNameController,
+                    label: 'First Name',
+                    prefixIcon: const Icon(LineAwesomeIcons.user),
+                    obscureText: false,
+                    validator: FirstNameValidator.validate,
+                  ),
+                  sizedBox10,
+                  MyTextField(
+                    controller: _lastNameController,
+                    label: 'Last Name',
+                    prefixIcon: const Icon(LineAwesomeIcons.user_1),
+                    obscureText: false,
+                    validator: LastNameValidator.validate,
+                  ),
+                  sizedBox10,
+                  MyTextField(
+                    controller: _dateOfBirthController,
+                    label: 'Date of Birth',
+                    prefixIcon: const Icon(LineAwesomeIcons.calendar),
+                    obscureText: false,
+                    validator: DateOfBirthValidator.validate,
+                  ),
+                  sizedBox10,
+                  MyTextField(
+                    controller: _emailController,
                     label: 'Email',
                     prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
                     obscureText: false,
@@ -107,7 +134,7 @@ class _RegisterScreenState extends State<SignUpScreen> {
                   ),
                   sizedBox10,
                   MyTextField(
-                    controller: passwordController,
+                    controller: _passwordController,
                     prefixIcon: const Icon(LineAwesomeIcons.lock),
                     label: 'Password',
                     obscureText: true,
@@ -115,16 +142,16 @@ class _RegisterScreenState extends State<SignUpScreen> {
                   ),
                   sizedBox10,
                   MyTextField(
-                    controller: confirmPasswordController,
-                    prefixIcon: const Icon(LineAwesomeIcons.lock),
+                    controller: _confirmPasswordController,
+                    prefixIcon: const Icon(LineAwesomeIcons.user_lock),
                     label: 'Confirm Password',
                     obscureText: true,
-                    validator: PasswordValidator.validate,
+                    validator: ConfirmPasswordValidator.validate,
                   ),
                   sizedBox25,
                   LogButton(
                     text: "Sign Up",
-                    onTap: signUserUp,
+                    onTap: signUp,
                   ),
                   sizedBox50,
                   Padding(
