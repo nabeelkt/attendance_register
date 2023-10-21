@@ -1,5 +1,5 @@
-import 'package:attendance_register/screens/home_screen.dart';
-import 'package:attendance_register/screens/signin_or_signup_screen.dart';
+import 'package:attendance_register/screens/auth/signin_or_signup.dart';
+import 'package:attendance_register/screens/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class AuthScreen extends StatelessWidget {
         builder: (context, snapshot) {
           //user is logged in
           if (snapshot.hasData) {
-            return const HomeScreen();
+            return HomeScreen();
           }
 
           //user is not logged in

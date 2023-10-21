@@ -1,7 +1,7 @@
-import 'package:attendance_register/auth/auth_screen.dart';
-import 'package:attendance_register/auth/firebase_options.dart';
-import 'package:attendance_register/theme/dark_mode.dart';
-import 'package:attendance_register/theme/light_mode.dart';
+import 'package:attendance_register/services/auth/auth_screen.dart';
+import 'package:attendance_register/services/auth/firebase_options.dart';
+import 'package:attendance_register/style/theme/dark_mode.dart';
+import 'package:attendance_register/style/theme/light_mode.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

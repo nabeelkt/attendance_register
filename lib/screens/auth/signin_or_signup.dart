@@ -1,5 +1,5 @@
-import 'package:attendance_register/screens/sign_in_screen.dart';
-import 'package:attendance_register/screens/sign_up_screen.dart';
+import 'package:attendance_register/screens/auth/sign_in_screen.dart';
+import 'package:attendance_register/screens/auth/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignInOrSignUp extends StatefulWidget {
@@ -27,7 +27,7 @@ class _LoginOrRegisterScreen extends State<SignInOrSignUp> {
       );
     } else {
       return SignUpScreen(
-        onTap: togglePages,
+        onPressed: togglePages,
       );
     }
   }
