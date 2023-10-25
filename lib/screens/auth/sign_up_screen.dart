@@ -8,6 +8,7 @@ import 'package:attendance_register/utils/helper/name_validator.dart';
 import 'package:attendance_register/utils/helper/password_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:sign_button/constants.dart';
@@ -29,6 +30,13 @@ class _RegisterScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
+  Future addUserDetails(Map<String, String> userDetails, String uid) async {
+    await FirebaseFirestore.instance
+        .collection('Employee')
+        .doc(uid)
+        .set(userDetails);
+  }
 
   @override
   void dispose() {
@@ -47,24 +55,106 @@ class _RegisterScreenState extends State<SignUpScreen> {
   }
 
   Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      await addUserDetails({
-        'first name': _firstNameController.text.trim(),
-        'last name': _lastNameController.text.trim(),
-        'email': _emailController.text.trim(),
-        'date of birth': _dateOfBirthController.text.trim(),
-        'password': _passwordController.text.trim(),
-      });
-    }
-  }
+    setState(() {
+      _isLoading = true;
+    });
 
-  Future addUserDetails(Map<String, String> userDetails) async {
-    await FirebaseFirestore.instance.collection('Employee').add(userDetails);
+    if (passwordConfirmed()) {
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        User? user = userCredential.user;
+        if (user != null) {
+          String fullName =
+              '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
+          await user.updateDisplayName(fullName);
+
+          // Use the user UID as the document ID
+          await addUserDetails({
+            'first name': _firstNameController.text.trim(),
+            'last name': _lastNameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'date of birth': _dateOfBirthController.text.trim(),
+            'password': _passwordController.text.trim(),
+          }, user.uid); // Pass the user UID to the function
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          if (kDebugMode) {
+            print('The password provided is too weak.');
+          }
+        } else if (e.code == 'email-already-in-use') {
+          if (kDebugMode) {
+            print('The account already exists for that email.');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
+  // Future signUp() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+
+  //   if (passwordConfirmed()) {
+  //     try {
+  //       UserCredential userCredential =
+  //           await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         email: _emailController.text.trim(),
+  //         password: _passwordController.text.trim(),
+  //       );
+
+  //       User? user = userCredential.user;
+  //       if (user != null) {
+  //         String fullName =
+  //             '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
+  //         await user.updateDisplayName(fullName);
+  //       }
+
+  //       await addUserDetails({
+  //         'first name': _firstNameController.text.trim(),
+  //         'last name': _lastNameController.text.trim(),
+  //         'email': _emailController.text.trim(),
+  //         'date of birth': _dateOfBirthController.text.trim(),
+  //         'password': _passwordController.text.trim(),
+  //       });
+  //     } on FirebaseAuthException catch (e) {
+  //       if (e.code == 'weak-password') {
+  //         if (kDebugMode) {
+  //           print('The password provided is too weak.');
+  //         }
+  //       } else if (e.code == 'email-already-in-use') {
+  //         if (kDebugMode) {
+  //           print('The account already exists for that email.');
+  //         }
+  //       }
+  //     } catch (e) {
+  //       if (kDebugMode) {
+  //         print(e);
+  //       }
+  //     }
+  //   }
+
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  // }
+
+  // Future addUserDetails(Map<String, String> userDetails) async {
+  //   await FirebaseFirestore.instance.collection('Employee').add(userDetails);
+  // }
 
   bool passwordConfirmed() {
     if (_passwordController.text.trim() ==
@@ -81,140 +171,150 @@ class _RegisterScreenState extends State<SignUpScreen> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  sizedBox25,
-                  const Text(
-                    "A T T E N D  M E",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  sizedBox25,
-                  const Text(
-                    'Let\'s create an account for you!',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  sizedBox25,
-                  MyTextField(
-                    controller: _firstNameController,
-                    label: 'First Name',
-                    prefixIcon: const Icon(LineAwesomeIcons.user),
-                    obscureText: false,
-                    validator: FirstNameValidator.validate,
-                  ),
-                  sizedBox10,
-                  MyTextField(
-                    controller: _lastNameController,
-                    label: 'Last Name',
-                    prefixIcon: const Icon(LineAwesomeIcons.user_1),
-                    obscureText: false,
-                    validator: LastNameValidator.validate,
-                  ),
-                  sizedBox10,
-                  MyTextField(
-                    controller: _dateOfBirthController,
-                    label: 'Date of Birth',
-                    prefixIcon: const Icon(LineAwesomeIcons.calendar),
-                    obscureText: false,
-                    validator: DateOfBirthValidator.validate,
-                  ),
-                  sizedBox10,
-                  MyTextField(
-                    controller: _emailController,
-                    label: 'Email',
-                    prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
-                    obscureText: false,
-                    validator: EmailValidator.validate,
-                  ),
-                  sizedBox10,
-                  MyTextField(
-                    controller: _passwordController,
-                    prefixIcon: const Icon(LineAwesomeIcons.lock),
-                    label: 'Password',
-                    obscureText: true,
-                    validator: PasswordValidator.validate,
-                  ),
-                  sizedBox10,
-                  MyTextField(
-                    controller: _confirmPasswordController,
-                    prefixIcon: const Icon(LineAwesomeIcons.user_lock),
-                    label: 'Confirm Password',
-                    obscureText: true,
-                    validator: ConfirmPasswordValidator.validate,
-                  ),
-                  sizedBox25,
-                  LogButton(
-                    text: "Sign Up",
-                    onTap: signUp,
-                  ),
-                  sizedBox50,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: Theme.of(context).colorScheme.inversePrimary,
+                        sizedBox25,
+                        const Text(
+                          "A T T E N D  M E",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        sizedBox25,
+                        const Text(
+                          'Let\'s create an account for you!',
+                          style: TextStyle(
+                            fontSize: 16,
                           ),
                         ),
+                        sizedBox25,
+                        MyTextField(
+                          controller: _firstNameController,
+                          label: 'First Name',
+                          prefixIcon: const Icon(LineAwesomeIcons.user),
+                          obscureText: false,
+                          validator: FirstNameValidator.validate,
+                        ),
+                        sizedBox10,
+                        MyTextField(
+                          controller: _lastNameController,
+                          label: 'Last Name',
+                          prefixIcon: const Icon(LineAwesomeIcons.user_1),
+                          obscureText: false,
+                          validator: LastNameValidator.validate,
+                        ),
+                        sizedBox10,
+                        MyTextField(
+                          controller: _dateOfBirthController,
+                          label: 'Date of Birth',
+                          prefixIcon: const Icon(LineAwesomeIcons.calendar),
+                          obscureText: false,
+                          validator: DateOfBirthValidator.validate,
+                        ),
+                        sizedBox10,
+                        MyTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
+                          obscureText: false,
+                          validator: EmailValidator.validate,
+                        ),
+                        sizedBox10,
+                        MyTextField(
+                          controller: _passwordController,
+                          prefixIcon: const Icon(LineAwesomeIcons.lock),
+                          label: 'Password',
+                          obscureText: true,
+                          validator: PasswordValidator.validate,
+                        ),
+                        sizedBox10,
+                        MyTextField(
+                          controller: _confirmPasswordController,
+                          prefixIcon: const Icon(LineAwesomeIcons.user_lock),
+                          label: 'Confirm Password',
+                          obscureText: true,
+                          validator: ConfirmPasswordValidator.validate,
+                        ),
+                        sizedBox25,
+                        LogButton(
+                          text: "Sign Up",
+                          onTap: signUp,
+                        ),
+                        sizedBox50,
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                            ),
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  thickness: 0.5,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Text(
+                                  'Or continue with',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  thickness: 0.5,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: Theme.of(context).colorScheme.inversePrimary,
+                        Container(
+                          padding: const EdgeInsets.all(25),
+                          child: SignInButton(
+                            buttonType: ButtonType.google,
+                            onPressed: () => AuthService().signInWithGoogle(),
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an account?',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            GestureDetector(
+                              onTap: widget.onPressed,
+                              child: const Text(
+                                'Login now',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(25),
-                    child: SignInButton(
-                      buttonType: ButtonType.google,
-                      onPressed: () => AuthService().signInWithGoogle(),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Already have an account?',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: widget.onPressed,
-                        child: const Text(
-                          'Login now',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
       ),
     );

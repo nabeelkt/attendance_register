@@ -2,6 +2,7 @@ import 'package:attendance_register/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
+// ignore: must_be_immutable
 class UpdateProfileScreen extends StatelessWidget {
   const UpdateProfileScreen({super.key});
 
@@ -61,72 +62,83 @@ class UpdateProfileScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Form(
-                    child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Full Name"),
-                        prefixIcon: const Icon(LineAwesomeIcons.user),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    sizedBox25,
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Email"),
-                        prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    sizedBox25,
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Phone Number"),
-                        prefixIcon: const Icon(LineAwesomeIcons.phone),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    sizedBox25,
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: const Text("Password"),
-                        prefixIcon: const Icon(LineAwesomeIcons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    sizedBox25,
-                    SizedBox(
-                      width: 200,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const UpdateProfileScreen()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            side: BorderSide.none,
-                            shape: const StadiumBorder()),
-                        child: const Text(
-                          'Save Profile',
-                          style: TextStyle(
-                            color: Colors.black,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: const Text("First Name"),
+                          prefixIcon: const Icon(LineAwesomeIcons.user),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
+                      sizedBox25,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: const Text("Last Name"),
+                          prefixIcon: const Icon(LineAwesomeIcons.user_1),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      sizedBox25,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: const Text("Date of Birth"),
+                          prefixIcon: const Icon(LineAwesomeIcons.calendar),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      sizedBox25,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: const Text("Email"),
+                          prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      sizedBox25,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: const Text("Password"),
+                          prefixIcon: const Icon(LineAwesomeIcons.lock),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      sizedBox25,
+                      SizedBox(
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UpdateProfileScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                              side: BorderSide.none,
+                              shape: const StadiumBorder()),
+                          child: const Text(
+                            'Update Profile',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               )
             ],
           ),

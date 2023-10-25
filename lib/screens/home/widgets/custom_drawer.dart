@@ -1,3 +1,4 @@
+import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/screens/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       },
                     ),
                   ),
+                  kDivider,
                   Padding(
                     padding: const EdgeInsets.only(left: 25),
                     child: ListTile(
@@ -63,6 +65,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       },
                     ),
                   ),
+                  kDivider,
                   Padding(
                     padding: const EdgeInsets.only(left: 25),
                     child: ListTile(
@@ -80,6 +83,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       },
                     ),
                   ),
+                  kDivider,
                   Padding(
                     padding: const EdgeInsets.only(left: 25),
                     child: ListTile(
@@ -98,6 +102,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ],
               ),
             ),
+            kDivider,
             // logout button
             const Padding(
               padding: EdgeInsets.only(
