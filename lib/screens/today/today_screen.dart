@@ -16,14 +16,11 @@ class TodayScreen extends StatefulWidget {
 
 class _TodayScreenState extends State<TodayScreen> {
   late double screenWidth;
-  //bool isPunchedIn = false;
   late String currentDocumentId;
-  //String punchInTime = '--/--';
-  //String punchOutTime = '--/--';
   late String punchInTime = '--/--';
   late String punchOutTime = '--/--';
   late SharedPreferences prefs;
-  late bool isPunchedIn;
+  late bool isPunchedIn = false;
   @override
   void initState() {
     super.initState();
