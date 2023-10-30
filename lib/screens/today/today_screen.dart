@@ -1,9 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/core/constants/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
@@ -21,6 +26,8 @@ class _TodayScreenState extends State<TodayScreen> {
   late String punchOutTime = '--/--';
   late SharedPreferences prefs;
   late bool isPunchedIn = false;
+  late String locationText = '';
+  late String completeAddress = '';
   @override
   void initState() {
     super.initState();
@@ -69,9 +76,8 @@ class _TodayScreenState extends State<TodayScreen> {
         user != null ? user.displayName ?? 'No Name Found' : 'No Name Found';
     screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(14.0),
-      child: Column(
-        children: [
+        padding: const EdgeInsets.all(14.0),
+        child: Column(children: [
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -211,67 +217,122 @@ class _TodayScreenState extends State<TodayScreen> {
                 );
               }),
           Container(
-            margin: const EdgeInsets.only(top: 24),
-            child: Builder(
-              builder: (context) {
-                final GlobalKey<SlideActionState> key = GlobalKey();
-                return SlideAction(
-                  text:
-                      isPunchedIn ? 'Slide to Punch Out' : 'Slide to Punch In',
-                  textStyle: TextStyle(
-                    color: kPrimary,
-                    fontSize: screenWidth / 20,
-                    fontFamily: 'NexaRegular',
-                  ),
-                  outerColor: Colors.white,
-                  innerColor: kPrimary,
-                  key: key,
-                  onSubmit: () async {
-                    String formattedTime =
-                        DateFormat('hh:mm a').format(DateTime.now());
-                    String formattedDate =
-                        DateFormat('dd-MM-yyyy').format(DateTime.now());
-
-                    if (isPunchedIn) {
-                      await FirebaseFirestore.instance
-                          .collection('Employee')
-                          .doc(user!.uid)
-                          .collection('Record')
-                          .doc(formattedDate)
-                          .collection('Punches')
-                          .add({
-                        'punchOut': formattedTime,
-                      });
-                      setState(() {
-                        isPunchedIn = false; // Toggle the punch-in status
-                        punchOutTime = formattedTime; // Update punch-out time
-                      });
-                      _savePunchOutTime(formattedTime);
-                      _savePunchInStatus(false);
-                    } else {
-                      await FirebaseFirestore.instance
-                          .collection('Employee')
-                          .doc(user!.uid)
-                          .collection('Record')
-                          .doc(formattedDate)
-                          .collection('Punches')
-                          .add({
-                        'punchIn': formattedTime,
-                      });
-                      setState(() {
-                        isPunchedIn = true; // Toggle the punch-in status
-                        punchInTime = formattedTime; // Update punch-in time
-                      });
-                      _savePunchInTime(formattedTime);
-                      _savePunchInStatus(true);
-                    }
+              margin: const EdgeInsets.only(top: 24),
+              child: Column(children: [
+                Builder(
+                  builder: (context) {
+                    final GlobalKey<SlideActionState> key = GlobalKey();
+                    return Column(
+                      children: [
+                        SlideAction(
+                          text: isPunchedIn
+                              ? 'Slide to Punch Out'
+                              : 'Slide to Punch In',
+                          textStyle: TextStyle(
+                            color: kPrimary,
+                            fontSize: screenWidth / 20,
+                            fontFamily: 'NexaRegular',
+                          ),
+                          outerColor: Colors.white,
+                          innerColor: kPrimary,
+                          key: key,
+                          onSubmit: () async {
+                            String formattedTime =
+                                DateFormat('hh:mm a').format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('dd-MM-yyyy').format(DateTime.now());
+                            if (await Permission.location.isGranted) {
+                              Position position =
+                                  await Geolocator.getCurrentPosition(
+                                desiredAccuracy: LocationAccuracy.high,
+                              );
+                              double latitude = position.latitude;
+                              double longitude = position.longitude;
+                              // Use Geolocator to fetch the complete address
+                              try {
+                                List<Placemark> placemarks =
+                                    await placemarkFromCoordinates(
+                                        latitude, longitude);
+                                if (placemarks.isNotEmpty) {
+                                  Placemark placemark = placemarks[0];
+                                  setState(() {
+                                    completeAddress =
+                                        '${placemark.street},${placemark.subLocality}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+                                  });
+                                }
+                              } catch (e) {
+                                print('Error: $e');
+                              }
+                              if (isPunchedIn) {
+                                await FirebaseFirestore.instance
+                                    .collection('Employee')
+                                    .doc(user!.uid)
+                                    .collection('Record')
+                                    .doc(formattedDate)
+                                    .collection('Punches')
+                                    .add({
+                                  'punchOut': formattedTime,
+                                  'timestamp': FieldValue.serverTimestamp(),
+                                  'completeAddress': completeAddress,
+                                });
+                                setState(() {
+                                  isPunchedIn = false;
+                                  punchOutTime = formattedTime;
+                                });
+                                _savePunchOutTime(formattedTime);
+                                _savePunchInStatus(false);
+                              } else {
+                                await FirebaseFirestore.instance
+                                    .collection('Employee')
+                                    .doc(user!.uid)
+                                    .collection('Record')
+                                    .doc(formattedDate)
+                                    .collection('Punches')
+                                    .add({
+                                  'punchIn': formattedTime,
+                                  'timestamp': FieldValue.serverTimestamp(),
+                                  'completeAddress': completeAddress,
+                                });
+                                setState(() {
+                                  isPunchedIn = true;
+                                  punchInTime = formattedTime;
+                                });
+                                _savePunchInTime(formattedTime);
+                                _savePunchInStatus(true);
+                              }
+                            } else {
+                              var status = await Permission.location.request();
+                              if (status.isGranted) {
+                                // Permission granted
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Location permission denied')),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                        if (completeAddress.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(12.0),
+                            child: Text(
+                              completeAddress,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: screenWidth / 20,
+                                fontFamily: 'NexaRegular',
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
                   },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+                )
+              ]))
+        ]));
   }
 }

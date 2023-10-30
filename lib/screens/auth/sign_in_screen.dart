@@ -32,6 +32,7 @@ class _LoginScreenState extends State<SignInScreen> {
     if (_formKey.currentState!.validate()) {
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -43,7 +44,9 @@ class _LoginScreenState extends State<SignInScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+        Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
         showErrorMessage(e.code);
       }
     }

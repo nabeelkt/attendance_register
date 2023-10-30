@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const AuthScreen(),
+      //const CustomBottomNavigation(),
       theme: lightMode,
       darkTheme: darkMode,
     );

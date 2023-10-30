@@ -1,3 +1,6 @@
+import 'package:attendance_register/screens/history/history_screen.dart';
+import 'package:attendance_register/screens/home/home_screen.dart';
+import 'package:attendance_register/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -17,18 +20,38 @@ class CustomBottomNavigation extends StatelessWidget {
           tabBackgroundColor: Colors.grey.shade800,
           gap: 8,
           padding: const EdgeInsets.all(16),
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.home,
               text: 'Home',
-            ),
-            GButton(
-              icon: Icons.date_range,
-              text: 'Calendar',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
+              },
             ),
             GButton(
               icon: Icons.history,
               text: 'History',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const HistoryScreen()),
+                );
+              },
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Profile',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen()),
+                );
+              },
             ),
           ],
         ),

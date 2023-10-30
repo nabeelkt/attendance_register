@@ -13,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        "DASHBOARD",
+        "",
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
       leading: IconButton(
