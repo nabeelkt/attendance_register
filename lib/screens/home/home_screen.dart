@@ -1,5 +1,4 @@
 import 'package:attendance_register/screens/home/widgets/custom_appbar.dart';
-import 'package:attendance_register/screens/home/widgets/custom_bottom_navigation.dart';
 import 'package:attendance_register/screens/home/widgets/custom_drawer.dart';
 import 'package:attendance_register/screens/today/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +17,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+      appBar: CustomAppBar(
+        scaffoldKey: _scaffoldKey,
+        title: 'Home',
+      ),
       drawer: const CustomDrawer(),
       body: const TodayScreen(),
-      bottomNavigationBar: const CustomBottomNavigation(),
     );
   }
 }

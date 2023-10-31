@@ -22,7 +22,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       // Fetch other user data
-      // ...
     }
   }
 
@@ -53,20 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Profile'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          'Profile',
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            LineAwesomeIcons.angle_left,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -161,11 +148,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileMenuWidget(
                   title: "Settings",
                   icon: LineAwesomeIcons.cog,
-                  onPress: () {},
-                ),
-                ProfileMenuWidget(
-                  title: "History",
-                  icon: LineAwesomeIcons.history,
                   onPress: () {},
                 ),
                 kDivider,

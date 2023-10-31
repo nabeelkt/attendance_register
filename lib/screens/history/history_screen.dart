@@ -1,9 +1,7 @@
-import 'package:attendance_register/screens/home/widgets/custom_bottom_navigation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -13,7 +11,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  int _selectedIndex = 1;
   User? user = FirebaseAuth.instance.currentUser;
   double screenHeight = 0;
   double screenWidth = 0;
@@ -100,20 +97,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        title: const Text('History'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          'History',
-          style: TextStyle(color: Theme.of(context).colorScheme.primary),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            LineAwesomeIcons.angle_left,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -159,7 +144,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigation(),
     );
   }
 }

@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-
-  const CustomAppBar({Key? key, required this.scaffoldKey}) : super(key: key);
+  final String title;
+  const CustomAppBar({
+    Key? key,
+    required this.scaffoldKey,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -13,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        "",
+        title,
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
       leading: IconButton(

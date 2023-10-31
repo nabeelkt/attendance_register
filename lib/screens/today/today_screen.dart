@@ -183,7 +183,7 @@ class _TodayScreenState extends State<TodayScreen> {
               text: TextSpan(
                 text: DateTime.now().day.toString(),
                 style: TextStyle(
-                  color: kPrimary,
+                  color: kPrimaryColor,
                   fontSize: screenWidth / 18,
                   fontFamily: "NexaBold",
                 ),
@@ -229,12 +229,12 @@ class _TodayScreenState extends State<TodayScreen> {
                               ? 'Slide to Punch Out'
                               : 'Slide to Punch In',
                           textStyle: TextStyle(
-                            color: kPrimary,
+                            color: kPrimaryColor,
                             fontSize: screenWidth / 20,
                             fontFamily: 'NexaRegular',
                           ),
                           outerColor: Colors.white,
-                          innerColor: kPrimary,
+                          innerColor: kPrimaryColor,
                           key: key,
                           onSubmit: () async {
                             String formattedTime =

@@ -103,58 +103,6 @@ class _RegisterScreenState extends State<SignUpScreen> {
       _isLoading = false;
     });
   }
-  // Future signUp() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-
-  //   if (passwordConfirmed()) {
-  //     try {
-  //       UserCredential userCredential =
-  //           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //         email: _emailController.text.trim(),
-  //         password: _passwordController.text.trim(),
-  //       );
-
-  //       User? user = userCredential.user;
-  //       if (user != null) {
-  //         String fullName =
-  //             '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
-  //         await user.updateDisplayName(fullName);
-  //       }
-
-  //       await addUserDetails({
-  //         'first name': _firstNameController.text.trim(),
-  //         'last name': _lastNameController.text.trim(),
-  //         'email': _emailController.text.trim(),
-  //         'date of birth': _dateOfBirthController.text.trim(),
-  //         'password': _passwordController.text.trim(),
-  //       });
-  //     } on FirebaseAuthException catch (e) {
-  //       if (e.code == 'weak-password') {
-  //         if (kDebugMode) {
-  //           print('The password provided is too weak.');
-  //         }
-  //       } else if (e.code == 'email-already-in-use') {
-  //         if (kDebugMode) {
-  //           print('The account already exists for that email.');
-  //         }
-  //       }
-  //     } catch (e) {
-  //       if (kDebugMode) {
-  //         print(e);
-  //       }
-  //     }
-  //   }
-
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
-
-  // Future addUserDetails(Map<String, String> userDetails) async {
-  //   await FirebaseFirestore.instance.collection('Employee').add(userDetails);
-  // }
 
   bool passwordConfirmed() {
     if (_passwordController.text.trim() ==

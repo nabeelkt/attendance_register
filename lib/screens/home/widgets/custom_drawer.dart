@@ -1,6 +1,5 @@
 import 'package:attendance_register/core/constants/colors.dart';
-import 'package:attendance_register/screens/history/history_screen.dart';
-import 'package:attendance_register/screens/profile/profile_screen.dart';
+import 'package:attendance_register/screens/home/home_screen.dart';
 import 'package:attendance_register/screens/settings/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,51 +40,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
-                        Navigator.pop(context);
-                        // Update the UI based on the item selected
-                      },
-                    ),
-                  ),
-                  kDivider,
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.person,
-                      ),
-                      title: const Text(
-                        'Profile',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  kDivider,
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.history,
-                      ),
-                      title: const Text(
-                        'History',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HistoryScreen(),
-                          ),
+                              builder: (context) => const HomeScreen()),
                         );
                       },
                     ),
@@ -109,6 +67,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         );
                       },
+                    ),
+                  ),
+                  kDivider,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.info,
+                      ),
+                      title: const Text(
+                        'About',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {},
                     ),
                   ),
                 ],
