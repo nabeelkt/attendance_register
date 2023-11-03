@@ -1,3 +1,4 @@
+import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/screens/history/history_screen.dart';
 import 'package:attendance_register/screens/home/home_screen.dart';
 import 'package:attendance_register/screens/profile/profile_screen.dart';
@@ -7,6 +8,7 @@ class CustomBottomNavigation extends StatefulWidget {
   const CustomBottomNavigation({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomBottomNavigationState createState() => _CustomBottomNavigationState();
 }
 
@@ -32,8 +34,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.deepPurple,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: kPrimaryColor,
+        unselectedItemColor: kGrey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:attendance_register/core/constants/constant.dart';
 import 'package:attendance_register/utils/components/buttons/log_button.dart';
 import 'package:attendance_register/utils/components/my_textfield.dart';
 import 'package:attendance_register/utils/helper/email_validator.dart';
@@ -65,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               style: TextStyle(fontSize: 18),
             ),
           ),
-          const SizedBox(height: 15),
+          sizedBox15,
           MyTextField(
             controller: emailController,
             prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
@@ -74,7 +75,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             obscureText: false,
             validator: EmailValidator.validate,
           ),
-          const SizedBox(height: 15),
+          sizedBox15,
           LogButton(
             text: "Reset Password",
             onTap: passwordReset,

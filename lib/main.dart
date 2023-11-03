@@ -1,4 +1,4 @@
-import 'package:attendance_register/screens/home/widgets/custom_bottom_navigation.dart';
+import 'package:attendance_register/services/auth/auth_check.dart';
 import 'package:attendance_register/services/auth/firebase_options.dart';
 import 'package:attendance_register/style/theme/dark_mode.dart';
 import 'package:attendance_register/style/theme/light_mode.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CustomBottomNavigation(),
+      home: const AuthCheck(),
       theme: lightMode,
       darkTheme: darkMode,
     );

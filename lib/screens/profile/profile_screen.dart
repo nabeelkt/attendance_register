@@ -2,7 +2,10 @@ import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/core/constants/constant.dart';
 import 'package:attendance_register/screens/profile/update_profile_screen.dart';
 import 'package:attendance_register/screens/profile/widget/profile_menu.dart';
+import 'package:attendance_register/screens/settings/settings_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
@@ -16,12 +19,42 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late String firstName = '';
   late String lastName = '';
+  late String email = '';
+  late String displayName = '';
+  late String profileImageUrl = '';
+  @override
+  void initState() {
+    super.initState();
+    // Call the getUserData function to fetch the user data
+    getUserData;
+  }
 
   // Function to fetch user data
-  Future<void> getUserData() async {
+  Future<void> get getUserData async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Fetch other user data
+      try {
+        // Fetch user data from Firestore
+        DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+            await FirebaseFirestore.instance
+                .collection('Employee')
+                .doc(user.uid)
+                .get();
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data = documentSnapshot.data()!;
+          setState(() {
+            firstName = data['first name'] ?? '';
+            lastName = data['last name'] ?? '';
+            email = data['email'] ?? '';
+            displayName = '$firstName $lastName';
+            profileImageUrl = data['profileImageUrl'] ?? '';
+          });
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error fetching user data: $e');
+        }
+      }
     }
   }
 
@@ -29,27 +62,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void refreshData() {
     setState(() {
       // Call the getUserData function to update the data
-      getUserData();
+      getUserData;
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-    // Call the getUserData function to fetch the user data
-    getUserData();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    String email =
-        user != null ? user.email ?? 'No Email Found' : 'No Email Found';
-
-    String displayName =
-        user != null ? user.displayName ?? 'No Name Found' : 'No Name Found';
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -69,22 +87,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 120,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.asset(tProfileImage),
-                      ),
-                    ),
-                    sizedBox10,
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.grey.withOpacity(0.9),
-                        ),
-                        child: const Icon(LineAwesomeIcons.alternate_pencil,
-                            size: 18.0, color: Colors.black),
+                        child: profileImageUrl.isNotEmpty
+                            ? Image.network(profileImageUrl)
+                            : Image.asset(tProfileImage),
                       ),
                     ),
                   ],
@@ -126,31 +131,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UpdateProfileScreen()),
+                          builder: (context) => UpdateProfileScreen(
+                            onProfileUpdated: () {
+                              // Call the refreshData function to update the data
+                              refreshData();
+                            },
+                          ),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
-                      backgroundColor: Colors.black,
+                      backgroundColor: kBlack,
                     ),
                     child: const Text(
                       'Edit Profile',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: kWhite,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 30),
-                kDivider,
+                const Divider(),
                 const SizedBox(height: 10),
                 // Menu
                 ProfileMenuWidget(
                   title: "Settings",
                   icon: LineAwesomeIcons.cog,
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    );
+                  },
                 ),
-                kDivider,
+                const Divider(),
                 const SizedBox(height: 10),
                 ProfileMenuWidget(
                   title: "About",

@@ -81,6 +81,14 @@ class _RegisterScreenState extends State<SignUpScreen> {
             'date of birth': _dateOfBirthController.text.trim(),
             'password': _passwordController.text.trim(),
           }, user.uid); // Pass the user UID to the function
+
+          // Show success message
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Your registration is successful'),
+            ),
+          );
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
@@ -247,7 +255,7 @@ class _RegisterScreenState extends State<SignUpScreen> {
                                     .inversePrimary,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            sizeBox4,
                             GestureDetector(
                               onTap: widget.onPressed,
                               child: const Text(

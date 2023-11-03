@@ -2,6 +2,7 @@
 
 import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/core/constants/constant.dart';
+import 'package:attendance_register/models/user_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +29,12 @@ class _TodayScreenState extends State<TodayScreen> {
   late bool isPunchedIn = false;
   late String locationText = '';
   late String completeAddress = '';
+  late String displayName = '';
   @override
   void initState() {
     super.initState();
     _initPrefs();
+    _fetchUserName();
   }
 
   void _initPrefs() async {
@@ -61,6 +64,13 @@ class _TodayScreenState extends State<TodayScreen> {
     prefs.setString('punchOutTime', time);
   }
 
+  void _fetchUserName() async {
+    String name = await UserServices.getUserData();
+    setState(() {
+      displayName = name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
@@ -72,8 +82,6 @@ class _TodayScreenState extends State<TodayScreen> {
       print('No user currently signed in.');
     }
 
-    String displayName =
-        user != null ? user.displayName ?? 'No Name Found' : 'No Name Found';
     screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
         padding: const EdgeInsets.all(14.0),
@@ -114,7 +122,7 @@ class _TodayScreenState extends State<TodayScreen> {
             margin: const EdgeInsets.only(top: 12, bottom: 30),
             height: 150,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: kWhite,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
@@ -144,7 +152,7 @@ class _TodayScreenState extends State<TodayScreen> {
                         style: TextStyle(
                           fontFamily: 'NexaBold',
                           fontSize: screenWidth / 18,
-                          color: Colors.black,
+                          color: kBlack,
                         ),
                       ),
                     ],
@@ -168,7 +176,7 @@ class _TodayScreenState extends State<TodayScreen> {
                         style: TextStyle(
                           fontFamily: 'NexaBold',
                           fontSize: screenWidth / 18,
-                          color: Colors.black,
+                          color: kBlack,
                         ),
                       ),
                     ],
@@ -233,7 +241,7 @@ class _TodayScreenState extends State<TodayScreen> {
                             fontSize: screenWidth / 20,
                             fontFamily: 'NexaRegular',
                           ),
-                          outerColor: Colors.white,
+                          outerColor: kWhite,
                           innerColor: kPrimaryColor,
                           key: key,
                           onSubmit: () async {
@@ -322,7 +330,7 @@ class _TodayScreenState extends State<TodayScreen> {
                             child: Text(
                               completeAddress,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: kBlack,
                                 fontSize: screenWidth / 20,
                                 fontFamily: 'NexaRegular',
                               ),

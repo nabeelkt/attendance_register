@@ -1,3 +1,5 @@
+import 'package:attendance_register/core/constants/colors.dart';
+import 'package:attendance_register/core/constants/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       margin: const EdgeInsets.only(bottom: 30),
       height: 70,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: kWhite,
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -112,7 +114,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 fontSize: screenWidth / 18,
               ),
             ),
-            const SizedBox(height: 16),
+            sizedBox16,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -131,7 +133,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            sizedBox20,
             SizedBox(
               height: 700,
               child: ListView.builder(

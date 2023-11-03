@@ -1,3 +1,4 @@
+import 'package:attendance_register/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatefulWidget {
@@ -31,6 +32,7 @@ class _MyTextFieldState extends State<MyTextField> {
         horizontal: 10,
       ),
       child: TextFormField(
+        style: const TextStyle(color: kBlack),
         controller: widget.controller,
         decoration: InputDecoration(
           labelText: widget.label,

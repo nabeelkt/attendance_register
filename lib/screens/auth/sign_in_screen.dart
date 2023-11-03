@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/core/constants/constant.dart';
 import 'package:attendance_register/services/auth/auth_services.dart';
 import 'package:attendance_register/utils/components/buttons/log_button.dart';
@@ -62,7 +65,7 @@ class _LoginScreenState extends State<SignInScreen> {
             child: Text(
               message,
               style: const TextStyle(
-                color: Colors.white,
+                color: kWhite,
               ),
             ),
           ),
@@ -197,7 +200,7 @@ class _LoginScreenState extends State<SignInScreen> {
                           color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      sizeBox4,
                       GestureDetector(
                         onTap: widget.onTap,
                         child: const Text(

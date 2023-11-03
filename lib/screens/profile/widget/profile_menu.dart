@@ -1,3 +1,4 @@
+import 'package:attendance_register/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
@@ -27,7 +28,7 @@ class ProfileMenuWidget extends StatelessWidget {
           ),
           child: Icon(
             icon,
-            color: Colors.blueAccent,
+            color: kBlueAccent,
           ),
         ),
         title: Text(

@@ -1,17 +1,17 @@
 import 'package:attendance_register/screens/auth/signin_or_signup.dart';
-import 'package:attendance_register/screens/home/home_screen.dart';
+import 'package:attendance_register/screens/home/widgets/custom_bottom_navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthScreenCheck extends StatefulWidget {
-  const AuthScreenCheck({super.key});
+class AuthCheck extends StatefulWidget {
+  const AuthCheck({super.key});
 
   @override
-  State<AuthScreenCheck> createState() => _AuthScreenState();
+  State<AuthCheck> createState() => _AuthCheckState();
 }
 
-class _AuthScreenState extends State<AuthScreenCheck> {
+class _AuthCheckState extends State<AuthCheck> {
   bool userAvailable = false;
   late SharedPreferences sharedPreferences;
 
@@ -23,7 +23,7 @@ class _AuthScreenState extends State<AuthScreenCheck> {
         builder: (context, snapshot) {
           //user is logged in
           if (snapshot.hasData) {
-            return const HomeScreen();
+            return const CustomBottomNavigation();
           }
 
           //user is not logged in

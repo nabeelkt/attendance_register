@@ -1,6 +1,6 @@
 import 'package:attendance_register/core/constants/colors.dart';
-import 'package:attendance_register/screens/home/home_screen.dart';
 import 'package:attendance_register/screens/settings/settings_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +16,31 @@ void logout() {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+  late String profileImageUrl = '';
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileImageUrl(); // Call the function to fetch the profile image URL
+  }
+
+  Future<void> fetchProfileImageUrl() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await FirebaseFirestore.instance
+              .collection('Employee')
+              .doc(user.uid)
+              .get();
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data()!;
+        setState(() {
+          profileImageUrl =
+              data['profileImageUrl'] ?? ''; // Get the profile image URL
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -24,7 +49,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         child: Column(
           children: [
             DrawerHeader(
-              child: Image.asset('assets/user/user.png'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: profileImageUrl.isNotEmpty
+                    ? Image.network(
+                        profileImageUrl) // Display the profile image using the network image widget
+                    : Image.asset(
+                        'assets/user/user.png'), // Use a default image if no profile image is available
+              ),
             ),
             Expanded(
               child: Column(
@@ -40,11 +72,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
+                        Navigator.pop(context);
                       },
                     ),
                   ),
@@ -96,13 +124,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: ListTile(
                 leading: Icon(
                   Icons.logout,
-                  color: Colors.red,
+                  color: kRed,
                 ),
                 title: Text(
                   'Logout',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: kRed,
                   ),
                 ),
                 onTap: logout,
