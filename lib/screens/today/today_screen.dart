@@ -330,7 +330,9 @@ class _TodayScreenState extends State<TodayScreen> {
                             child: Text(
                               completeAddress,
                               style: TextStyle(
-                                color: kBlack,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
                                 fontSize: screenWidth / 20,
                                 fontFamily: 'NexaRegular',
                               ),

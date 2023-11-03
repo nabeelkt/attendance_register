@@ -141,7 +141,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
             sizedBox20,
             SizedBox(
-              height: 700,
+              height: 600,
               child: ListView.builder(
                 itemCount: dataList.length,
                 itemBuilder: (context, index) {
