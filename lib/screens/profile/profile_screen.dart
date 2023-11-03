@@ -70,8 +70,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(
+          'Profile',
+          style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       body: SingleChildScrollView(
         child: Center(

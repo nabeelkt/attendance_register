@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       home: const AuthCheck(),
       theme: lightMode,
       darkTheme: darkMode,
+      themeMode: ThemeMode.system,
     );
   }
 }

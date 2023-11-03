@@ -18,13 +18,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         title,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
       ),
       leading: IconButton(
         // Hamburger menu icon
         icon: Icon(
           Icons.menu,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.inversePrimary,
         ),
         onPressed: () {
           scaffoldKey.currentState?.openDrawer();
@@ -35,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           // User icon
           icon: Icon(
             Icons.account_circle,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.inversePrimary,
           ),
           onPressed: () {
             Navigator.push(
@@ -47,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       ],
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
     );
   }
 }

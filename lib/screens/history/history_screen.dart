@@ -99,8 +99,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(
+          'History',
+          style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

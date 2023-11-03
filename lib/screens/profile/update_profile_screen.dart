@@ -171,10 +171,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         title: Text(
           'Edit Profile',
-          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
         ),
         leading: IconButton(
           onPressed: () {
@@ -182,7 +182,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           },
           icon: Icon(
             LineAwesomeIcons.angle_left,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.inversePrimary,
           ),
         ),
       ),
