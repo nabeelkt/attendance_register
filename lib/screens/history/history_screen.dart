@@ -88,7 +88,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Center(
-        child: Text(data),
+        child: Text(
+          data,
+          style: const TextStyle(color: kBlack),
+        ),
       ),
     );
   }
