@@ -1,5 +1,5 @@
-import 'package:attendance_register/core/constants/colors.dart';
 import 'package:attendance_register/core/constants/constant.dart';
+import 'package:attendance_register/screens/history/widget/build_punch_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -72,30 +72,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
-  Widget buildPunchTile(String data) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 30),
-      height: 70,
-      decoration: const BoxDecoration(
-        color: kWhite,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(2, 2),
-          )
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Center(
-        child: Text(
-          data,
-          style: const TextStyle(color: kBlack),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -145,7 +121,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: ListView.builder(
                 itemCount: dataList.length,
                 itemBuilder: (context, index) {
-                  return buildPunchTile(dataList[index]);
+                  return BuildPunchTile(data: dataList[index]);
                 },
               ),
             ),
